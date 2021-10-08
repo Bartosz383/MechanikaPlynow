@@ -51,7 +51,7 @@ if wybor == 1:
     print('\n Lepkość płynu wynosi ', mi, 'Pa*s')
 
 elif wybor == 2:
-    print('\n Wybrałeś siłę nośną łożyska ')
+    print('\n Wybrałeś siłę nośną łożyska, moment tarcia lepkiego i moc rozpraszana na łożysku ')
     print('Wprowadź dane: ')
     L = float(input('\n Długość wirującego czopa [mm] '))
     L /= 1000

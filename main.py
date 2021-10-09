@@ -3,7 +3,8 @@ import math
 print('''        Hej. 
         Jestem pomocny programem z mechaniki płynów. Co chciałbyś policzyć?
             1 - Lepkość 
-            2 - Parametry łożyska ślizgowego ''')
+            2 - Parametry łożyska ślizgowego 
+            3 - Napór hydrostatyczny działający na płaską klapę ''')
 
 
 wybor = int(input('\n Wprowadź nr operacji '))

@@ -77,6 +77,14 @@ elif wybor == 2:
     print('\n Moc rozpraszaną na łożysku wskutek lepkosci oleju ', P, 'W')
 
 elif wybor == 3:
+    print('''      
+                    1 - Kształt połowy koła
+                    2 - Kształt koła z kołowym wycięciem
+                    3 - Kształt prostokąta z doklejonym trapezem
+                    4 - Kształt zaokrąglonego prostokąta''')
+
+    WewnetrznyWybor = int(input('\n Wybierz kształt klapy '))
+
     print('\n Wybrałeś lepkościomierz rotacyjny ')
     print('Wprowadź dane: ')
     L = float(input('\n Długość cylindra [m] '))

@@ -80,24 +80,108 @@ while start == 'NIE':
             break
 
         elif wybor == 3:
-            print('''      
-                            1 - Kształt połowy koła
-                            2 - Kształt koła z kołowym wycięciem
-                            3 - Kształt prostokąta z doklejonym trapezem
-                            4 - Kształt zaokrąglonego prostokąta''')
+            AG = 0.0;
+            SXG = 0.0;
+            SYG = 0.0;
+            IYG = 0.0;
+            IXYG = 0.0
+            rho = float(input("\n Podaj gestosc cieczy [kg/m^3]: "))
+            alpha = float(input("Podaj kąt nachylenia ściany (w stopniach): "))
+            print('''
+            -----------------------------------------------"
+             UWAGA! dla kazdego obszaru podajemy 'kod'
+             Jesli element stanowi wyciecie wprowadz kod = -1
+                         w przeciwnym razie wprowadz kod = 1
 
-            WewnetrznyWybor = int(input('\n Wybierz kształt klapy '))
-            break
-        elif wybor == 4:
-            print('''      
-                            1 - Kształt połowy koła
-                            2 - Kształt koła z kołowym wycięciem
-                            3 - Kształt prostokąta z doklejonym trapezem
-                            4 - Kształt zaokrąglonego prostokąta''')
-
-            WewnetrznyWybor = int(input('\n Wybierz kształt klapy '))
-            break
-        else: print('\n Wybór nieprawidłowy')
+             ------ OBSZARY W KSZTALCIE KOLA ----------''')
+            nkol = int(input("\nLiczba obszarow w ksztalcie kola: "))
+            for i in range(nkol):
+                kod = int(input("Wprowadz kod %d-go kola " % (i + 1)))
+                xk = float(input("x wspolrzedna środka %d-go kola " % (i + 1)))
+                yk = float(input("y wspolrzedna śodka %d-go kola " % (i + 1)))
+                r = float(input("promien %d kola " % (i + 1)))
+                A = math.pi * r ** 2 * kod                                      # pole powierzchni
+                SX = yk * A;                                                    #
+                SY = xk * A                                                     #
+                AG = AG + A;                                                    #
+                SXG = SXG + SX;                                                 #
+                SYG = SYG + SY                                                  #
+                IYG = IYG + A * r ** 2 / 4.0 + A * xk ** 2                      #
+                IXYG = IXYG + A * xk * yk                                       #
+            print("\n------ OBSZARY W KSZTALCIE POLKOLA ----------")
+            nkol = int(input("\nLiczba obszarow w ksztalcie polkola: "))
+            for i in range(nkol):
+                kod = int(input("\nWprowadz kod %d-go polkola " % (i + 1)))
+                xk = float(input("x wspolrzedna srodka cieciwy %d-go polkola " % (i + 1)))
+                yk = float(input("y wspolrzedna srodka cieciwy %d-go polkola " % (i + 1)))
+                r = float(input("promien %d półkola " % (i + 1)))
+                beta = float(input(
+                    "KAT MIERZONY PRZECIWNIE DO RUCHU WSKAZOWEK ZEGARA MIEDZY OSIA OX A OSIA SYMETRII POLKOLA SKIEROWANa W STRONe WYPUKLOSCI (w stopniach)"))
+                beta = beta * math.pi / 180.0
+                A = math.pi * r ** 2 * kod / 2.0
+                c = 4.0 * r / math.pi / 3.0
+                xc = xk + c * math.cos(beta)
+                yc = yk + c * math.sin(beta)
+                SX = yc * A;
+                SY = xc * A
+                AG = AG + A;
+                SXG = SXG + SX;
+                SYG = SYG + SY
+                IYG = IYG + (A * r * r / 4.0 - A * c ** 2 * math.cos(beta) ** 2) + A * xc ** 2
+                IXYG = IXYG + c * c * A / 2 * math.sin(-2 * beta) + A * xc * yc
+            print("\n------ OBSZARY W KSZTALCIE WIELOKATA ----------")
+            print("\nWspolrzedne wierzcholkow nalezy wprowadzac po kolei zgodnie z kierunkiemruchu wskazowek zegara")
+            nwiel = int(input("\nLiczba obszarow w ksztalcie wielokąta: "))
+            for j in range(nwiel):
+                X = [];
+                Y = []
+                print('WPROWADZ kod', j + 1, ' WIELOKATA')
+                kod = int(input("kod = "))
+                n = int(input("Liczba wierzcholkow %d-go wielokata wynosi " % (j + 1)))
+                for i in range(n):
+                    print("Podaj wspolrzedne", i + 1, "wierzcholka")
+                    X.append(float(input("Wspolrzedna x ")))
+                    Y.append(float(input("Wspolrzedna y ")))
+                X.append(X[0])
+                Y.append(Y[0])
+                #	print x
+                A = 0.0;
+                SX = 0.0;
+                SY = 0.0;
+                IY = 0.0;
+                IXY = 0.0
+                for I in range(n):
+                    A = A + (X[I + 1] - X[I]) * (Y[I + 1] + Y[I])
+                    SX = SX + (X[I + 1] - X[I]) * (Y[I] * Y[I] + Y[I] * Y[I + 1] + Y[I + 1] * Y[I + 1])
+                    SY = SY + (Y[I] - Y[I + 1]) * (X[I] * X[I] + X[I] * X[I + 1] + X[I + 1] * X[I + 1])
+                    IY = IY + (Y[I] - Y[I + 1]) * (
+                                X[I] ** 3 + X[I] * X[I] * X[I + 1] + X[I] * X[I + 1] * X[I + 1] + X[I + 1] ** 3)
+                    IXY = IXY + (X[I + 1] - X[I]) * (
+                                X[I] * (3.0 * Y[I] ** 2 + Y[I + 1] ** 2 + 2.0 * Y[I] * Y[I + 1]) + X[I + 1] * (
+                                    3.0 * Y[I + 1] ** 2 + Y[I] ** 2 + 2.0 * Y[I] * Y[I + 1]))
+                A = kod * A / 2.0;
+                SX = kod * SX / 6.0;
+                SY = kod * SY / 6.0
+                IY = kod * IY / 12.0;
+                IXY = kod * IXY / 24.0
+                SXG = SXG + SX
+                SYG = SYG + SY
+                AG = AG + A
+                IYG = IYG + IY
+                IXYG = IXYG + IXY
+            XC = SYG / AG;
+            YC = SXG / AG
+            print("\n\n======== WYNIKI ===========")
+            print("\nPole obszaru wynosi", AG)
+            print("SXG= ", SXG, "SX= ", SX)
+            print("\nWspolrzedne srodka ciezkosci ")
+            print("XC = ", XC)
+            print("YC = ", YC)
+            print("\nWspolrzedne srodka parcia")
+            print("XS =", IYG / SYG)
+            print("YS =", IXYG / SYG)
+            print("\nSila parcia")
+            print("F = ", 9.81 * rho * AG * XC * math.sin(alpha * math.pi / 180))
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE wielkimi literami jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

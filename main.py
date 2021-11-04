@@ -4,7 +4,8 @@ print('''        Hej.
         Jestem pomocny programem z mechaniki płynów. Co chciałbyś policzyć?
             1 - Lepkość 
             2 - Parametry łożyska ślizgowego 
-            3 - Napór hydrostatyczny działający na płaską klapę ''')
+            3 - Napór hydrostatyczny działający na płaską klapę 
+            4 - Obliczanie spadku cisnienia w rurze ''')
 
 start = 'NIE'
 while start == 'NIE':
@@ -182,6 +183,52 @@ while start == 'NIE':
             print("YS =", IXYG / SYG)
             print("\nSila parcia")
             print("F = ", 9.81 * rho * AG * XC * math.sin(alpha * math.pi / 180))
+
+        elif wybor == 4:
+
+            def wsp(Re, e, D):
+                if Re < 2300:
+                    f = 64 / Re
+                elif Re < 4000:
+                    f = 2.82 * e - 7 * Re ** 1.5
+                else:
+                    f = 1                                                                           # f to f początkowe
+                    df = 1
+                    while df > 1e-6:
+                        f1 = 1 / (1.14 - 2 * math.log10(e / D + 9.35 / (Re * math.sqrt(f)))) ** 2  # f1 to f końcowe
+                        df = math.fabs(f - f1)                                                      # fabs liczba zmiennoprzecinkowa dodatnia f rzeczywisa
+                        f = f1
+                return f
+
+            znak = 'T'
+
+            while znak == 'T':
+                # dane
+
+                L = float(input('\nDługość rury [m] '))
+                D = float(input('\nŚrednica rury [m] '))
+                e = float(input('\nChropowatość [mm] '))
+                e = e / 1000  # Przeliczenie mm na metry
+                rho = float(input('\nGęstośc płynu [kg/m^3] '))
+                mu = float(input('\nLepkość płynu [Pa*s] '))
+                Q = float(input('\nObjętościowe natężenie przepływu [m3/s] '))
+
+                # Koniec wprowadzania danych
+
+                v = 4 * Q / (math.pi * D ** 2)
+
+                Re = rho * v * D / mu
+
+                print('\nLiczba Reynoldsa wynosi Re = ', Re)
+
+                f = wsp(Re, e, D)
+
+                dp = f * L / D * rho * v ** 2 / 2
+                print('\n==================== Wynik =================')
+                print('\nSpadek ciśnienia wynosi ', dp, 'Pa')
+
+                znak = input('\nCzy chcesz powtórzyć obliczenia? (T/N) ')
+                znak = znak.upper()
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE wielkimi literami jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

@@ -5,7 +5,9 @@ print('''        Hej.
             1 - Lepkość 
             2 - Parametry łożyska ślizgowego 
             3 - Napór hydrostatyczny działający na płaską klapę 
-            4 - Obliczanie spadku cisnienia w rurze ''')
+            4 - Obliczanie spadku cisnienia w rurze 
+            123 - Minimalna powierzchnia walca o danej objetości
+            321 - Minimalna powierzchnia walca o danej objętości obliczana metodą złotego podziału''')
 
 start = 'NIE'
 while start == 'NIE':
@@ -224,6 +226,35 @@ while start == 'NIE':
             dp = f * L / D * rho * v ** 2 / 2
             print('\n==================== Wynik =================')
             print('\nSpadek ciśnienia wynosi ', dp, 'Pa')
+            break
+        elif wybor == 123:
+
+            V = float(input('\nPodaj objętość [m^3] '))
+
+            r = (V / (2*math.pi))**(1/3)
+
+            Pc = 2*math.pi*r**2 + 2*V/r
+
+            h = V / (2*math.pi*r**2)
+
+            a = 27**(1/3)
+
+            print('\n Minimalna objętość to ', Pc, ' Promień dla tej powierzchni to ', r, ' Wysokość dla tej powierzchni to ', h)
+            print(a)
+
+            break
+        elif wybor == 321:
+
+            V = float(input('\nPodaj objętość [m^3] '))
+            E = float(input('\nPodaj dokładność obliczeń '))
+            a = float(input('\nPodaj pierwszy przedział '))
+            b = float(input('\nPodaj drugi przedział '))
+
+            ZP = (math.sqrt(5) - 1) / 2
+
+           
+            #print('\n Minimalna objętość to ', Pc, ' Promień dla tej powierzchni to ', r, ' Wysokość dla tej powierzchni to ', h)
+
             break
 
 

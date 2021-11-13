@@ -251,8 +251,12 @@ while start == 'NIE':
             b = float(input('\nPodaj drugi przedział '))
 
             ZP = (math.sqrt(5) - 1) / 2
+            d = ZP * (b - a)
+            r1 = a + d
+            r2 = b - d
+            P1 = 2 * math.pi * r1 ** 2 + 2 * V / r1
+            P2 = 2 * math.pi * r2 ** 2 + 2 * V / r2
 
-           
             #print('\n Minimalna objętość to ', Pc, ' Promień dla tej powierzchni to ', r, ' Wysokość dla tej powierzchni to ', h)
 
             break

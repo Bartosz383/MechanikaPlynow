@@ -257,7 +257,17 @@ while start == 'NIE':
             P1 = 2 * math.pi * r1 ** 2 + 2 * V / r1
             P2 = 2 * math.pi * r2 ** 2 + 2 * V / r2
 
-            #print('\n Minimalna objętość to ', Pc, ' Promień dla tej powierzchni to ', r, ' Wysokość dla tej powierzchni to ', h)
+            while ((b - a) < E):
+                if (P1 < P2):
+                    a = r2
+                    r1 = r2
+                    r2 = b - d
+                elif (P1 > P2):
+                    b = r1
+                    r2 = r1
+                    r1 = a + d
+
+            print((a + b) / 2)
 
             break
 

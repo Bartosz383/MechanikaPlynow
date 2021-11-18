@@ -5,7 +5,7 @@ print('''        Hej.
             1 - Lepkość 
             2 - Parametry łożyska ślizgowego 
             3 - Napór hydrostatyczny działający na płaską klapę 
-            4 - Obliczanie spadku cisnienia w rurze 
+            4 - Obliczanie przepływu w rurze (spadek ciśnienia, objętościowe natężenie przepływu, średnica rury)
             123 - Minimalna powierzchnia walca o danej objetości
             321 - Minimalna powierzchnia walca o danej objętości obliczana metodą złotego podziału''')
 

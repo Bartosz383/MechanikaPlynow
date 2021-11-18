@@ -188,45 +188,117 @@ while start == 'NIE':
             break
 
         elif wybor == 4:
-
             def wsp(Re, e, D):
                 if Re < 2300:
                     f = 64 / Re
                 elif Re < 4000:
                     f = 2.82 * e - 7 * Re ** 1.5
                 else:
-                    f = 1                                                                           # f to f początkowe
+                    f = 1  # f to f początkowe
                     df = 1
                     while df > 1e-6:
                         f1 = 1 / (1.14 - 2 * math.log10(e / D + 9.35 / (Re * math.sqrt(f)))) ** 2  # f1 to f końcowe
-                        df = math.fabs(f - f1)                   # fabs liczba zmiennoprzecinkowa dodatnia f rzeczywisa
+                        df = math.fabs(f - f1)  # fabs liczba zmiennoprzecinkowa dodatnia, f rzeczywisa
                         f = f1
                 return f
 
-             # dane
 
-            L = float(input('\nDługość rury [m] '))
-            D = float(input('\nŚrednica rury [m] '))
-            e = float(input('\nChropowatość [mm] '))
-            e = e / 1000  # Przeliczenie mm na metry
-            rho = float(input('\nGęstośc płynu [kg/m^3] '))
-            mu = float(input('\nLepkość płynu [Pa*s] '))
-            Q = float(input('\nObjętościowe natężenie przepływu [m3/s] '))
+            print('''**********************************************
+                    Obliczania przepływu w rurze''')
 
-            # Koniec wprowadzania danych
+            znak = 'T'
 
-            v = 4 * Q / (math.pi * D ** 2)
+            while znak == 'T':
+                # or znak == 't'
+                # dane
 
-            Re = rho * v * D / mu
+                L = float(input('\nDługość rury [m] '))
+                e = float(input('\nChropowatość [mm] '))
+                e = e / 1000  # chropoatość Przeliczenie mm na metry
+                rho = float(input('\nGęstośc płynu [kg/m^3] '))
+                mu = float(input('\nLepkość płynu [Pa*s] '))
 
-            print('\nLiczba Reynoldsa wynosi Re = ', Re)
+                print('''=== Wybierz parametr do obliczenia ===
+                    1 - spadek ciśnienia
+                    2 - objętościowe natężenie pzepływu
+                    3 - średnicę rury
+                    ===========================================''')
 
-            f = wsp(Re, e, D)
+                # Koniec wprowadzania danych
 
-            dp = f * L / D * rho * v ** 2 / 2
-            print('\n==================== Wynik =================')
-            print('\nSpadek ciśnienia wynosi ', dp, 'Pa')
+                wybor = int(input('\n Wybierz 1, 2 lub 3 '))
+
+                if wybor == 1:
+                    Q = float(input('\nObjętościowe natężenie przepływu [m3/s] '))
+                    D = float(input('\nŚrednica rury [m] '))
+
+                    v = 4 * Q / (math.pi * D ** 2)
+
+                    Re = rho * v * D / mu
+
+                    print('\nLiczba Reynoldsa wynosi Re = ', Re)
+
+                    f = wsp(Re, e, D)
+
+                    dp = f * L / D * rho * v ** 2 / 2
+                    print('\n==================== Wynik =================')
+                    print('\nSpadek ciśnienia wynosi ', dp, 'Pa')
+
+                if wybor == 2:
+                    dp = float(input('\nRóżnica ciśnień na końcach rur [Pa] '))
+                    D = float(input('\nŚrednica rury [m] '))
+
+                    v = dp * D ** 2 / (32 * mu * L)
+
+                    Re = rho * v * D / mu
+
+                    if Re < 2300:
+                        Q = v * math.pi * D ** 2 / 4
+                        print('\n Objętościowy wydatek przepływu wynisi ', Q, ' m^3/s')
+                        print('\n Pędkośc przepływu wynisi ', v, ' m/s')
+                        print('\n Przepływ laminarny')
+                    else:
+                        c = 2 * D * dp / (L * rho)
+                        blad = 1.
+                        while blad > 1e-6:
+                            v1 = v
+                            Re = rho * v * D / mu
+                            f = wsp(Re, e, D)
+                            v = math.sqrt(c / f)
+                            blad = math.fabs(v - v1)
+                        Q = v * math.pi * D ** 2 / 4
+                        print('\n Objętościowy wydatek przepływu wynisi ', Q, ' m^3/s')
+                        print('\n Pędkośc przepływu wynisi ', v, ' m/s')
+                        print('\n Przepływ turbulentny')
+
+                if wybor == 3:
+                    dp = float(input('\nRóżnica ciśnień na końcach rur [Pa] '))
+                    Q = float(input('\nNatężenie pzepływu [m^3/s] '))
+                    D = (128 * mu * L * Q / (math.pi * dp)) ** 0.25
+                    v = 4 * Q / (math.pi * D ** 2)
+                    Re = rho * v * D / mu
+
+                    if Re < 2300:
+                        print('\nŚrednica wynosi ', D, ' m')
+                        print('\n Przepływ laminarny')
+                    else:
+                        c = 8 * L * rho * Q ** 2 / (math.pi ** 2 * dp)
+
+                        blad = 1.
+                        while blad > 1e-6:
+                            D1 = D
+                            Re = rho * v * D / mu
+                            f = wsp(Re, e, D)
+                            D = (c * f) ** 0.2
+                            blad = math.fabs(D - D1)
+
+                        print('\nŚrednica wynosi ', D, ' m')
+                        print('\n Przepływ turbulentny')
+
+                znak = input('\nCzy chcesz powtórzyć obliczenia? (T/N) ')
+                znak = znak.upper()
             break
+
         elif wybor == 123:
 
             V = float(input('\nPodaj objętość [m^3] '))
@@ -245,6 +317,45 @@ while start == 'NIE':
             break
         elif wybor == 321:
 
+            # #f = lambda x: 4 - x ** 2 - 0.2 * x ** 3
+            # f = lambda x:  2 * math.pi * x ** 2 + 2 / x
+            #
+            # xl = 0    # moje a, b
+            # xu = 1
+            #
+            # print('x \t\t ea \t\t xopt')
+            # ea = 100; i = 1
+            #
+            # R = (5 ** 0.5 - 1) / 2          # moje ZP
+            # D = R * (xu - xl)
+            # x1 = xl + D
+            # x2 = xu - D
+            # f1 = f(x1)
+            # f2 = f(x2)
+            #
+            # while ea > 0.1:
+            #     if f1 > f2:
+            #         xl = x2
+            #         x2 = x1
+            #         f2 = f1
+            #         x1 = xl + R * (xu -xl)
+            #         f1 = f(x1)
+            #     else:
+            #         xu = x1
+            #         x1 = x2
+            #         f1 = f2
+            #         x2 = xu - R * (xu - xl)
+            #         f2 = f(x2)
+            #
+            #     if f1 > f2:
+            #         xopt = x1
+            #     else:
+            #         xopt = x2
+            #
+            #     ea = (1 - R) * abs((xu - xl) / xopt) * 100
+            #     print('%f \t %f \t %f' % (i, ea, xopt))
+            #     i +=1
+
             V = float(input('\nPodaj objętość [m^3] '))
             E = float(input('\nPodaj dokładność obliczeń '))
             a = float(input('\nPodaj pierwszy przedział '))
@@ -258,16 +369,17 @@ while start == 'NIE':
             P2 = 2 * math.pi * r2 ** 2 + 2 * V / r2
 
             while ((b - a) < E):
-                if (P1 < P2):
+                 if (P1 < P2):
                     a = r2
                     r1 = r2
                     r2 = b - d
-                elif (P1 > P2):
-                    b = r1
-                    r2 = r1
-                    r1 = a + d
-
-            print((a + b) / 2)
+                 elif (P1 > P2):
+                     b = r1
+                     r2 = r1
+                     r1 = a + d
+            print('Pole z lewej strony wynosi ', P1, ' z dokładnością ', E)
+            print('Pole z prawej strony wynosi ', P2, ' z dokładnością ', E)
+            print('Pole wynosi ', (P1 + P2) / 2, ' z dokładnoscią ', E)
 
             break
 

@@ -6,8 +6,9 @@ print('''        Hej.
             2 - Parametry łożyska ślizgowego 
             3 - Napór hydrostatyczny działający na płaską klapę 
             4 - Obliczanie przepływu w rurze (spadek ciśnienia, objętościowe natężenie przepływu, średnica rury)
-            123 - Minimalna powierzchnia walca o danej objetości
-            321 - Minimalna powierzchnia walca o danej objętości obliczana metodą złotego podziału''')
+            5 - Obliczanie prędkości opadania kulki
+            6 - Obliczanie niebezpiecznej prędkości dla komina
+            ''')
 
 start = 'NIE'
 while start == 'NIE':
@@ -219,9 +220,10 @@ while start == 'NIE':
                 mu = float(input('\nLepkość płynu [Pa*s] '))
 
                 print('''=== Wybierz parametr do obliczenia ===
-                    1 - spadek ciśnienia
-                    2 - objętościowe natężenie pzepływu
-                    3 - średnicę rury
+                    1 - Spadek ciśnienia
+                    2 - Objętościowe natężenie pzepływu
+                    3 - Średnicę rury
+                    4 - Wydatek przepływu i prędkość wypływu z rury o danym kącie nachylenia
                     ===========================================''')
 
                 # Koniec wprowadzania danych
@@ -295,94 +297,105 @@ while start == 'NIE':
                         print('\nŚrednica wynosi ', D, ' m')
                         print('\n Przepływ turbulentny')
 
+                if wybor == 4:
+                    alfa = float(input('\nKąt nachylenia w stopniach '))
+                    D = float(input('\nŚrednica rury [cm] '))
+                    #v = math.sqrt(A/(1 + f * B))
+                    Q = v*math.pi*D**2/4
+
+                    if Re < 2300:
+                        print('\nPrędkość przepływu wynosi ', v, ' m/s')
+                        print('\n Wydatek przepływu wynosi ', Q, 'm^3/s')
+                    else:
+
+
+                        blad = 1.
+                        while blad > 1e-6:
+                            f = wsp(Re, e, D)
+                            v1 = v
+                            blad = math.fabs(D - D1)
+
+                        Q = v * math.pi * D ** 2 / 4
+                        print('\nPrędkość przepływu wynosi ', v, ' m/s')
+                        print('\n Wydatek przepływu wynosi ', Q, 'm^3/s')
+
                 znak = input('\nCzy chcesz powtórzyć obliczenia? (T/N) ')
                 znak = znak.upper()
-            break
-
-        elif wybor == 123:
-
-            V = float(input('\nPodaj objętość [m^3] '))
-
-            r = (V / (2*math.pi))**(1/3)
-
-            Pc = 2*math.pi*r**2 + 2*V/r
-
-            h = V / (2*math.pi*r**2)
-
-            a = 27**(1/3)
-
-            print('\n Minimalna objętość to ', Pc, ' Promień dla tej powierzchni to ', r, ' Wysokość dla tej powierzchni to ', h)
-            print(a)
-
-            break
-        elif wybor == 321:
-
-            # #f = lambda x: 4 - x ** 2 - 0.2 * x ** 3
-            # f = lambda x:  2 * math.pi * x ** 2 + 2 / x
-            #
-            # xl = 0    # moje a, b
-            # xu = 1
-            #
-            # print('x \t\t ea \t\t xopt')
-            # ea = 100; i = 1
-            #
-            # R = (5 ** 0.5 - 1) / 2          # moje ZP
-            # D = R * (xu - xl)
-            # x1 = xl + D
-            # x2 = xu - D
-            # f1 = f(x1)
-            # f2 = f(x2)
-            #
-            # while ea > 0.1:
-            #     if f1 > f2:
-            #         xl = x2
-            #         x2 = x1
-            #         f2 = f1
-            #         x1 = xl + R * (xu -xl)
-            #         f1 = f(x1)
-            #     else:
-            #         xu = x1
-            #         x1 = x2
-            #         f1 = f2
-            #         x2 = xu - R * (xu - xl)
-            #         f2 = f(x2)
-            #
-            #     if f1 > f2:
-            #         xopt = x1
-            #     else:
-            #         xopt = x2
-            #
-            #     ea = (1 - R) * abs((xu - xl) / xopt) * 100
-            #     print('%f \t %f \t %f' % (i, ea, xopt))
-            #     i +=1
-
-            V = float(input('\nPodaj objętość [m^3] '))
-            E = float(input('\nPodaj dokładność obliczeń '))
-            a = float(input('\nPodaj pierwszy przedział '))
-            b = float(input('\nPodaj drugi przedział '))
-
-            ZP = (math.sqrt(5) - 1) / 2
-            d = ZP * (b - a)
-            r1 = a + d
-            r2 = b - d
-            P1 = 2 * math.pi * r1 ** 2 + 2 * V / r1
-            P2 = 2 * math.pi * r2 ** 2 + 2 * V / r2
-
-            while ((b - a) < E):
-                 if (P1 < P2):
-                    a = r2
-                    r1 = r2
-                    r2 = b - d
-                 elif (P1 > P2):
-                     b = r1
-                     r2 = r1
-                     r1 = a + d
-            print('Pole z lewej strony wynosi ', P1, ' z dokładnością ', E)
-            print('Pole z prawej strony wynosi ', P2, ' z dokładnością ', E)
-            print('Pole wynosi ', (P1 + P2) / 2, ' z dokładnoscią ', E)
 
             break
 
+        elif wybor == 5:
+            print('''*******************************
+                Obliczanie prędkości opadania kulki
+                *************************************''')
+
+            # Dane
+
+            D = float(input('\nŚrednica [m] '))
+            rhoK = float(input('\nGęstość kuli [kg/m^3] '))
+            rhoP = float(input('\nGęstość płynu [kg/m^3] '))
+            mu = float(input('\nLepkość [Pa*s] '))
+
+            print('=' * 80)
+
+            v = 9.81 * D ** 2 * (rhoK - rhoP) / (18 * mu)  # prędkość
+            Re = rhoP * v * D / mu
+
+            if Re < 10:
+                print('\nPrędkość kuli v = ', v, ' m/s')
+                print('\nRe = ', Re)
+            else:
+                alpha = 4 * D * 9.81 * (rhoK - rhoP) / (3 * rhoP)
+                err = 1
+                i = 1
+                while err > 1e-6:
+                    Re = rhoP * v * D / mu
+                    CD = 24 / Re + 6 / (1 + math.sqrt(Re)) + 0.4
+                    v1 = v
+                    v = math.sqrt(alpha / CD)
+                    err = math.fabs(v - v1)
+                    i = i + 1
+                    if i > 1000:
+                        print('przekroczono 1000 iteracji')
+                        exit()
+                print('\Prędkość opadania kulki v = ', v, ' m/s')
+
+        elif wybor == 6:
+            print('''*******************************
+                Obliczanie niebezpiecznej prędkości dla komina
+                *************************************''')
+
+            # Dane
+
+            D = float(input('\nŚrednica komina [m] '))
+            d = float(input('\nŚrednica wewnętrzna komina [m] '))
+            H = float(input('\nWysokość komina [m] '))
+            rhoP = float(input('\nGęstość płynu [kg/m^3] '))
+            mu = float(input('\nLepkość [Pa*s] '))
+            sigmadop = float(input('\nDopuszczalne naprężenie [MPa] '))
+            sigmadop = sigmadop * 1000  # na pascale
+
+            print('=' * 80)
+
+            W = math.pi * (D ** 4 - d ** 4) / (32 * D)
+            # Mg = sigmadop*W
+            Mg = 1151.19
+            alpha = 4 * Mg / (rhoP * H ** 2 * D)
+            err = 1
+            v = 1
+            i = 1
+
+            while err > 1e-6:
+                Re = rhoP * v * D / mu
+                CD = 1 + 10 / Re ** 0.67
+                v1 = v
+                v = math.sqrt(alpha / CD)
+                err = math.fabs(v - v1)
+                i = i + 1
+                if i > 1000:
+                    print('przekroczono 1000 iteracji')
+                    exit()
+            print('\Prędkość opadania kulki v = ', v * 3.6, ' km/h')
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

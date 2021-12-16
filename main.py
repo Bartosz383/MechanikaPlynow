@@ -1,13 +1,14 @@
 import math
 
 print('''        Hej. 
-        Jestem pomocny programem z mechaniki płynów. Co chciałbyś policzyć?
+        Jestem pomocnym programem z mechaniki płynów. Co chciałbyś policzyć?
             1 - Lepkość 
             2 - Parametry łożyska ślizgowego 
             3 - Napór hydrostatyczny działający na płaską klapę 
             4 - Obliczanie przepływu w rurze (spadek ciśnienia, objętościowe natężenie przepływu, średnica rury)
             5 - Obliczanie prędkości opadania kulki
             6 - Obliczanie niebezpiecznej prędkości dla komina
+            7 - Przepływ w utwartym kanale
             ''')
 
 start = 'NIE'
@@ -396,6 +397,72 @@ while start == 'NIE':
                     print('przekroczono 1000 iteracji')
                     exit()
             print('\Prędkość opadania kulki v = ', v * 3.6, ' km/h')
+
+        elif wybor == 7:
+            def prostokat():
+                Y = 1.  # zmienna rzczywista
+                err = 1.
+                while err > 1e-6:
+                    A = 2 * Y + B  # zmienna pomocnicza, żeby zbyt wiele nie pisać
+                    F = Y ** (5. / 3.) / A ** (2. / 3.) - n * Q / (B ** (5. / 3.) * math.sqrt(s))
+                    DF = (5. / 3.) * Y ** (2. / 3.) * A ** (2. / 3.) - (4. / 3.) * Y ** (5. / 3.) * A ** (
+                                -1. / 3.) / A ** (4. / 3.)  # pochodna F
+                    Y1 = Y  # nowy igrek
+                    Y = Y - F / DF
+                    err = math.fabs(Y - Y1)
+                return Y
+
+
+            def trapez():
+                Y = 1.  # zmienna rzczywista
+                err = 1.
+                while err > 1e-6:
+                    A = math.sqrt(1 + Z ** 2)  # zmienna pomocnicza, żeby zbyt wiele nie pisać
+                    F = ((B + Y * Z) * Y) ** (5. / 3.) / (B + 2 * Y * A) ** (2. / 3.) - n * Q / math.sqrt(s)
+                    DF = ((B + Y * Z) * Y) ** (2. / 3.) * (
+                                10 * Y * Z * B + 16 * Y ** 2 * Z * A + 5 * B ** 2 + 6 * B * Y * A) / (
+                                 B + 2 * Y * A) ** (5. / 3.)  # pochodna F
+                    Y1 = Y  # nowy igrek
+                    Y = Y - F / DF
+                    err = math.fabs(Y - Y1)
+                return Y
+
+
+            import math
+
+            print('''
+            OBLICZANIE GŁĘBOKOŚCI KANAŁU
+            ''')
+
+            Q = float(input('\nObjęościowe naężenie przepłyu [m^3/s] '))
+            n = float(input('\nWspółczynnik Manninga [s/m^1/3] '))
+            s = float(input('\nPochylenie podłużne '))
+
+            print("""\n Wybierz kształt kanału
+                1 - prostokątny
+                2 - trójkąny
+                3 - trapezowy
+                4 - cylindryczny""")
+
+            wybor = int(input('\nKróty kanałwybierasz? '))
+
+            if wybor == 1:
+                B = float(input('\nSzerokość dna [m] '))
+                Y = prostokat()
+
+            elif wybor == 2:
+                gama = float(input('\nKąt odchylenia ścian bocznych od pionu [stopnie] '))
+                Z = math.tan(gama * math.pi / 180)
+                Y = (n * Q) ** (3. / 8.) / Z ** (5. / 8.) * (2 * math.sqrt(Z ** 2 + 1) ** 0.25 / s ** (3. / 16.))
+
+
+            elif wybor == 3:
+                B = float(input('\nSzerokość dna [m] '))
+                beta = float(input('\nKąt odchylenia ścian bocznych od pionu [stopnie] '))
+                Z = math.tan(beta * math.pi / 180)
+                Y = trapez()
+
+            print("\nGłębokość kanału ", Y, "m")
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

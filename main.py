@@ -431,8 +431,12 @@ while start == 'NIE':
                 Y = 1.
                 err = 1.
                 while err > 1e-6:
+                    fi = math.pi/180
                     F = (fi - math.sin(fi))**(5. /3. )/(fi**(2. /3. )) - 2**(5. / 3.)*n*Q / (R**(8. /3. )*math.sqrt(s))
                     DF = -1 * (fi - math.sin(fi))**(2. /3.) * (5*fi*math.cos(fi) - 3*fi - 2*math.sin(fi)) / (fi**(5. / 3.))
+                    Y1 = Y
+                    Y = Y - F /DF
+                    err = math.fabs(Y - Y1)
                 return Y
 
             import math
@@ -471,6 +475,7 @@ while start == 'NIE':
 
             elif wybor == 4:
                 fi = float(input('\nWartość kąta między stykiem lustra cieczy ze ścianą kanału a jego środkiem [stopniach] '))
+                R = float(input('\nPodaj wartośc promienia [m] '))
                 Y = cylindryczny()
 
 #            Rh = A / p                                 # promień zwilżony

@@ -427,6 +427,13 @@ while start == 'NIE':
                     err = math.fabs(Y - Y1)
                 return Y
 
+            def cylindryczny():
+                Y = 1.
+                err = 1.
+                while err > 1e-6:
+                    F = (fi - math.sin(fi))**(5. /3. )/(fi**(2. /3. )) - 2**(5. / 3.)*n*Q / (R**(8. /3. )*math.sqrt(s))
+                    DF = -1 * (fi - math.sin(fi))**(2. /3.) * (5*fi*math.cos(fi) - 3*fi - 2*math.sin(fi)) / (fi**(5. / 3.))
+                return Y
 
             import math
 
@@ -462,7 +469,14 @@ while start == 'NIE':
                 Z = math.tan(beta * math.pi / 180)
                 Y = trapez()
 
+            elif wybor == 4:
+                fi = float(input('\nWartość kąta między stykiem lustra cieczy ze ścianą kanału a jego środkiem [stopniach] '))
+                Y = cylindryczny()
+
+#            Rh = A / p                                 # promień zwilżony
+#            V = 1/n * Rh**(2. /3.) * math.sqrt(s)      # Rh promień hydrauliczy
             print("\nGłębokość kanału ", Y, "m")
+#            print("\nPrędkość przepływu jest równa ", V, "m/s")
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

@@ -11,6 +11,19 @@ print('''        Hej.
             7 - Przepływ w utwartym kanale
             ''')
 
+''' Moment dziaąłjący na płaską ścianę.
+    H = wysokość zalana wodą
+    L = długość ściany
+    F = siła, która działa w połowie wysokości (ciśnienie średnie P(H) => P(0)=0 P(H)=Pmax Pśr = (P(0) + Pmax)/2
+    M = siła razy ramie
+    
+    F = Rho * g * H * A
+    A = pole powierzchni = L * H
+    F = Rho * g * H^2 * L
+    M = F / 2
+
+'''
+
 start = 'NIE'
 while start == 'NIE':
     while True:

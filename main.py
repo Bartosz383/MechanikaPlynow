@@ -9,20 +9,10 @@ print('''        Hej.
             5 - Obliczanie prędkości opadania kulki
             6 - Obliczanie niebezpiecznej prędkości dla komina
             7 - Przepływ w utwartym kanale
+            8 - Obliczanie momentu działającego na płaską ścianę
             ''')
 
-''' Moment dziaąłjący na płaską ścianę.
-    H = wysokość zalana wodą
-    L = długość ściany
-    F = siła, która działa w połowie wysokości (ciśnienie średnie P(H) => P(0)=0 P(H)=Pmax Pśr = (P(0) + Pmax)/2
-    M = siła razy ramie
-    
-    F = Rho * g * H * A
-    A = pole powierzchni = L * H
-    F = Rho * g * H^2 * L
-    M = F / 2
 
-'''
 
 start = 'NIE'
 while start == 'NIE':
@@ -446,10 +436,11 @@ while start == 'NIE':
                 while err > 1e-6:
                     fi = math.pi/180
                     F = (fi - math.sin(fi))**(5. /3. )/(fi**(2. /3. )) - 2**(5. / 3.)*n*Q / (R**(8. /3. )*math.sqrt(s))
-                    DF = -1 * (fi - math.sin(fi))**(2. /3.) * (5*fi*math.cos(fi) - 3*fi - 2*math.sin(fi)) / (fi**(5. / 3.))
+                    DF = -1 * (fi - math.sin(fi))**(2. /3.) * (5*fi*math.cos(fi) - 3*fi - 2*math.sin(fi)) / 3*(fi**(5. / 3.))
                     Y1 = Y
                     Y = Y - F /DF
                     err = math.fabs(Y - Y1)
+                    Y = R*(1 - math.cos(fi/2))
                 return Y
 
             import math
@@ -495,6 +486,35 @@ while start == 'NIE':
 #            V = 1/n * Rh**(2. /3.) * math.sqrt(s)      # Rh promień hydrauliczy
             print("\nGłębokość kanału ", Y, "m")
 #            print("\nPrędkość przepływu jest równa ", V, "m/s")
+
+        elif wybor == 8:
+            print('''*******************************
+                Obliczanie momentu działającego na płaską ścianę
+                *************************************''')
+
+            ''' Moment działający na płaską ścianę.
+                H = wysokość zalana wodą
+                L = długość ściany
+                F = siła, która działa w połowie wysokości (ciśnienie średnie P(H) => P(0)=0 P(H)=Pmax Pśr = (P(0) + Pmax)/2
+                M = siła razy ramie
+
+                F = Rho * g * H * A
+                A = pole powierzchni = L * H
+                F = Rho * g * H^2 * L
+                M = F / 2
+
+            '''
+
+            L = float(input('\nDługość ściany [m] '))
+            H = float(input('\nWysokość zalana wodą [m] '))
+            Rho = float(input('\nGęstość płynu [kg/m^3] '))
+            A = L * H
+            g = 9.81
+
+            F = Rho * g * H * A
+            M = F / 2
+
+            print('\nMoment działający na płaską ścianę wynosi M = ', M/1000, ' kNm')
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

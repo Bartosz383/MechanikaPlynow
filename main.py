@@ -542,6 +542,8 @@ while start == 'NIE':
             print('''*******************************
                         Obliczanie wysokości na jakiej brama zacznie się otwierać
                         *************************************''')
+            
+            # zasada rozwiązywania jak w zadaniu 9
 
             H = float(input('\nWysokość zalana benzyną [m] '))
             L = float(input('\nDługość zbiorników [m] '))

@@ -11,6 +11,7 @@ print('''        Hej.
             7 - Przepływ w utwartym kanale
             8 - Obliczanie momentu działającego na płaską ścianę
             9 - Obliczanie wysokości zawiasu dla ściany z dwóch stron zalaną wodą o różnych poziomach
+            10 - Obliczanie wysokości na jakiej brama zacznie się otwierać
             ''')
 
 
@@ -536,6 +537,20 @@ while start == 'NIE':
             z = (H**3 - h**3)/(H**2 - h**2)
 
             print('\nWysokość zawiasu to z = ', z , ' m')
+
+        elif wybor == 10:
+            print('''*******************************
+                        Obliczanie wysokości na jakiej brama zacznie się otwierać
+                        *************************************''')
+
+            H = float(input('\nWysokość zalana benzyną [m] '))
+            L = float(input('\nDługość zbiorników [m] '))
+            RhoB = float(input('\nGęstość benzyny [kg/m^3] '))
+            RhoW = float(input('\nGęstość wody [kg/m^3] '))
+
+            h = math.sqrt(RhoB*H**2/RhoW)
+
+            print('\nWysokość wody przy której brama się otworzy to h = ', h, ' m')
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

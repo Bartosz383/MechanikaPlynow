@@ -10,6 +10,7 @@ print('''        Hej.
             6 - Obliczanie niebezpiecznej prędkości dla komina
             7 - Przepływ w utwartym kanale
             8 - Obliczanie momentu działającego na płaską ścianę
+            9 - Obliczanie wysokości zawiasu dla ściany z dwóch stron zalaną wodą o różnych poziomach
             ''')
 
 
@@ -515,6 +516,27 @@ while start == 'NIE':
             M = F / 2
 
             print('\nMoment działający na płaską ścianę wynosi M = ', M/1000, ' kNm')
+
+        elif wybor == 9:
+            print('''*******************************
+            Obliczanie wysokości zawiasu dla ściany z dwóch stron zalaną wodą o różnych poziomach
+            *************************************''')
+
+            ''' Równanie momentów F1 (z - H/3)=F2(z-h/3)
+            F1=Rho*g*(H/2)*H*L  F2=Rho*g*(h/2)*h*L
+            F1 = F2
+            H^2*z - H^3/3 = h^2*z - h^3/3
+            (H^2-h^2)*z=H^3-h^3
+            
+            '''
+
+            H = float(input('\nWysokość zalana wodą pierwszego zbiornkia [m] '))
+            h = float(input('\nWysokość zalana wodą drugiego zbiornkia [m] '))
+            g = 9.81
+
+            z = (H**3 - h**3)/(H**2 - h**2)
+
+            print('\nWysokość zawiasu to z = ', z , ' m')
 
     start = input('Czy chcesz wyjśc z programu? '
                   'Wpisz NIE jeżeli nie chcesz wyjść lub cokolwiek jeżeli chcesz wyjsć \n')

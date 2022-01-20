@@ -432,19 +432,18 @@ while start == 'NIE':
                 return Y
 
             def cylindryczny():
-                Y = 1.
+                theta = 1.
                 err = 1.
                 while err > 1e-6:
-                    fi = math.pi/180
-                    F = (fi - math.sin(fi))**(5. /3. )/(fi**(2. /3. )) - 2**(5. / 3.)*n*Q / (R**(8. /3. )*math.sqrt(s))
-                    DF = -1 * (fi - math.sin(fi))**(2. /3.) * (5*fi*math.cos(fi) - 3*fi - 2*math.sin(fi)) / 3*(fi**(5. / 3.))
-                    Y1 = Y
-                    Y = Y - F /DF
-                    err = math.fabs(Y - Y1)
-                    Y = R*(1 - math.cos(fi/2))
-                return Y
-
-            import math
+                    F = (theta - math.sin(theta)) ** (5. / 3.) / theta ** (2. / 3.) - 2 ** (5. / 3.) * n * Q / (
+                                R ** (8. / 3.) * math.sqrt(s))
+                    DF = -(theta - math.sin(theta)) ** (2. / 3.) * (
+                                5 * theta * math.cos(theta) - 3 * theta - 2 * math.sin(theta)) / (
+                                     3 * theta ** (5. / 3.))
+                    theta1 = theta
+                    theta = theta - F / DF
+                    err = math.fabs(theta - theta1)
+                return theta
 
             print('''
             OBLICZANIE GŁĘBOKOŚCI KANAŁU
